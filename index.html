@@ -5,6 +5,7 @@
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <style>
+    
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
       #map {
@@ -63,22 +64,24 @@ img{
     });
 
   
-    downloadUrl('http://mapas.valencia.es/lanzadera/opendata/Monumentos_falleros/JSON', function(data){
+    downloadUrl('https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/falles-fallas/exports/geojson?lang=es&timezone=Europe%2FBerlin', function(data){
       const jsonText = data.response;
       const datosJSON = JSON.parse(jsonText);
       datos=datosJSON['features'];
 
-      
 
         for (var i = 0; i < datos.length; i++) {
           var coords = datos[i].geometry.coordinates;
          //  contentString = datos[i].properties.nombre;//'<div id="content">'+"Falla nº 1";+'</div>';
-        proj4.defs("EPSG:26910","+proj=utm +zone=30 +ellps=WGS84 +datum=NAD83 +units=m +no_defs");
+      /*  proj4.defs("EPSG:26910","+proj=utm +zone=30 +ellps=WGS84 +datum=NAD83 +units=m +no_defs");
         var source = new proj4.Proj('EPSG:26910');  
         var dest = new proj4.Proj('EPSG:4326');
         var p = new proj4.Point(coords[0],coords[1]);
-        proj4.transform(source, dest, p);
-        var latLng = new google.maps.LatLng(p.y,p.x);
+        proj4.transform(source, dest, p);*/
+        
+
+       // var latLng = new google.maps.LatLng(p.y,p.x);
+      // var latLng = new google.maps.LatLng(coords[0],coords[1]);
         var contentString=datos[i].properties.nombre;
 
         infowindow = new google.maps.InfoWindow({
@@ -87,8 +90,8 @@ img{
       });
 
               var marker = new google.maps.Marker({
-                position: latLng,
                
+                position: { lat: coords[1], lng: coords[0] },
                 map: map,
             
               });
