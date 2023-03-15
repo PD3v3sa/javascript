@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+
+<script src="http://maps.googleapis.com/maps/api/js"></script>
+<style>
+    /* Always set the map height explicitly to define the size of the div
+     * element that contains the map. */
+    #mapa {
+      height: 100%;
+    }
+    /* Optional: Makes the sample page fill the window. */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    .posicion{
+              float: right;
+              }
+    
+img{
+  width:100px;
+  height:100px;
+  margin-right: 5px;
+  }
+  </style>
+<script>
+let map;
+     
+function initMap() {            
+                var catalunya = new google.maps.LatLng(38.50819181373499,-0.23339375853538513);
+            
+                var opciones = {
+                    zoom : 16,
+                    center: catalunya,
+                    mapTypeId: google.maps.MapTypeId.SATELLITE
+                };
+                var div = document.getElementById('mapa');
+            
+                var map = new google.maps.Map(div, opciones);
+            
+                var marcadores = [];
+            
+                    let requestURL = '[{"type":"FeatureCollection","features":['+
+                        '{"type":"Feature","properties":{"nom":"ART. CRISTIANA","bando":"cristia","image": "Cies/cristiana.png"},"geometry":{"type":"Point","coordinates":[-0.23339375853538513,38.50819181373499]}},'+
+                        '{"type":"Feature","properties":{"nom":"ART. MORA","bando":"moro","image": "Cies/amora.png"},"geometry":{"type":"Point","coordinates":[-0.233210027217865,38.50827471944355]}},'+
+                        '{"type":"Feature","properties":{"nom":"LLAURADORS","bando":"cristia","image": "Cies/llauradors.png"},"geometry":{"type":"Point","coordinates":[-0.23469060659408567,38.509137352924746]}},'+
+                        '{"type":"Feature","properties":{"nom":"CAÇADORS","bando":"cristia","image": "Cies/caçadors.png"},"geometry":{"type":"Point","coordinates":[-0.23271650075912473,38.51085839128057]}},'+
+                        '{"type":"Feature","properties":{"nom":"BERBERISCOS","bando":"moro","image": "Cies/berberiscos.png"},"geometry":{"type":"Point","coordinates":[-0.23276478052139282,38.51071357378447]}},'+
+                        '{"type":"Feature","properties":{"nom":"NEGRES","bando":"moro","image": "Cies/negres.png"},"geometry":{"type":"Point","coordinates":[-0.23778855800628662,38.50307141417089]}},'+
+                        '{"type":"Feature","properties":{"nom":"BEDUÏNS, Rei Moro","bando":"moro","image": "Cies/beduins.png"},"geometry":{"type":"Point","coordinates":[-0.23000746965408322,38.50522288690702]}},'+
+                        '{"type":"Feature","properties":{"nom":"PIRATES","bando":"cristia","image": "Cies/pirates.png"},"geometry":{"type":"Point","coordinates":[-0.22808432579040525,38.509038706796915]}},'+
+                        '{"type":"Feature","properties":{"nom":"TUAREG","bando":"moro","image": "Cies/tuaregs.png"},"geometry":{"type":"Point","coordinates":[-0.22823184728622434,38.508996729680256]}},'+
+                        '{"type":"Feature","properties":{"nom":"PAK-KOS","bando":"moro","image": "Cies/pakkos.png"},"geometry":{"type":"Point","coordinates":[-0.2280253171920776,38.50829780709224]}},'+
+                        '{"type":"Feature","properties":{"nom":"MARINOS","bando":"cristia","image": "Cies/marinos.png"},"geometry":{"type":"Point","coordinates":[-0.22752106189727783,38.50801445816453]}},'+
+                        '{"type":"Feature","properties":{"nom":"CATALANS","bando":"cristia","image": "Cies/catalans.png"},"geometry":{"type":"Point","coordinates":[-0.2272313833236694,38.50812150122381]}},'+
+                        '{"type":"Feature","properties":{"nom":"CONTRABANDO","bando":"cristia","image": "Cies/contrabando.png"},"geometry":{"type":"Point","coordinates":[-0.22708654403686526,38.508675603928175]}},'+
+                        '{"type":"Feature","properties":{"nom":"MERCADERS","bando":"moro","image": "Cies/mercaders.png"},"geometry":{"type":"Point","coordinates":[-0.2261209487915039,38.51017627734099]}},'+
+                        '{"type":"Feature","properties":{"nom":"MOROS DE CAPETA","bando":"moro","image": "Cies/capetes.png"},"geometry":{"type":"Point","coordinates":[-0.22606730461120605,38.512277167576016]}},'+
+                        '{"type":"Feature","properties":{"nom":"VOLUNTARIS","bando":"cristia","image": "Cies/voluntaris.png"},"geometry":{"type":"Point","coordinates":[-0.22636771202087402,38.511807043616614]}},'+
+                        '{"type":"Feature","properties":{"nom":"ART. ISLAM","bando":"moro","image": "Cies/islam.png"},"geometry":{"type":"Point","coordinates":[-0.226668119430542,38.51170630236882]}},'+
+                        '{"type":"Feature","properties":{"nom":"MOROS DEL RIFF","bando":"moro","image": "Cies/riff.png"},"geometry":{"type":"Point","coordinates":[-0.22658631205558777,38.511555190232805]}},'+
+                        '{"type":"Feature","properties":{"nom":"GUARDIA NEGRA","bando":"moro","image": "Cies/gnegra.png"},"geometry":{"type":"Point","coordinates":[-0.22624433040618896,38.511828031358846]}},'+
+                        '{"type":"Feature","properties":{"nom":"DESTRALERS","bando":"cristia","image": "Cies/destralers.png"},"geometry":{"type":"Point","coordinates":[-0.22565424442291263,38.51166432680727]}},'+
+                        '{"type":"Feature","properties":{"nom":"PESCADORS","bando":"cristia","image": "Cies/pescadors.png"},"geometry":{"type":"Point","coordinates":[-0.22910088300704956,38.51294247168328]}},'+
+                        '{"type":"Feature","properties":{"nom":"ALMOGAVERS","bando":"cristia","image": "Cies/almogavers.png"},"geometry":{"type":"Point","coordinates":[-0.22827476263046267,38.51365394151274]}}]}]';
+                   
+                        const data = JSON.parse(requestURL);
+            
+                    console.log(data[0].features);
+                    for(i=0;i<data[0].features.length;i++){
+                        console.log(data[0].features[i].geometry.coordinates[1]);
+                    
+                
+            
+                        var marcador = new google.maps.Marker({
+                            
+                            position : new google.maps.LatLng(data[0].features[i].geometry.coordinates[1],data[0].features[i].geometry.coordinates[0]),
+                            icon:data[0].features[i].properties.image,
+                            map : map,
+                            });
+                    
+                        }
+            
+            
+                
+              
+            }    
+            google.maps.event.addDomListener(window, 'load', initMap);
+
+            </script>
+    </head>
+        <body>
+            <div id="mapa" ></div>
+        
+        </body>    
+
+
+
+</html>
