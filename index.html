@@ -4,6 +4,7 @@
     <title>Simple Map</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
+
     <style>
     
       /* Always set the map height explicitly to define the size of the div
@@ -33,6 +34,7 @@ img{
   <body  >
     <div id="map"></div>
     <script>
+      
       var map;
       var datos;
       function downloadUrl(url, callback) {
@@ -56,6 +58,8 @@ img{
       function doNothing() {}
     
   function initMap(){  
+    
+
     var coord = {lat:39.4698228 ,lng:-0.3771872 };
     var map = new google.maps.Map(document.getElementById('map'),{
       zoom: 18,
@@ -63,12 +67,13 @@ img{
       center: new google.maps.LatLng(coord.lat,coord.lng)//coord
     });
 
-  
+
     downloadUrl('https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/falles-fallas/exports/geojson?lang=es&timezone=Europe%2FBerlin', function(data){
+
       const jsonText = data.response;
       const datosJSON = JSON.parse(jsonText);
       datos=datosJSON['features'];
-
+  
 
         for (var i = 0; i < datos.length; i++) {
           var coords = datos[i].geometry.coordinates;
@@ -80,6 +85,7 @@ img{
 
       });
 
+    
               var marker = new google.maps.Marker({
                
                 position: { lat: coords[1], lng: coords[0] },
@@ -121,7 +127,7 @@ img{
 
     </script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDmlw0x8VUvt3OK4xnvXPOy3JUHaUrDqVM&callback=initMap"></script>></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDmlw0x8VUvt3OK4xnvXPOy3JUHaUrDqVM&callback=initMap"></script>
 
   </body>
 </html>
