@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+
+    <style>
+    
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      .posicion{
+                float: right;
+                }
+      
+img{
+    width:100px;
+    height:100px;
+    margin-right: 5px;
+    }
+    </style>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.3/proj4.js"></script>
+      <script src="https://unpkg.com/@googlemaps/markerclusterer@2.0.2/dist/index.min.js"></script>
+  </head>
+  
+  <body  >
+    <div id="map"></div>
+    <script>
+       var map;
+
+       const markers = [];
+
+
+      function initMap(){
+        var coord = {lat:39.4698228 ,lng:-0.3771872 };
+     map = new google.maps.Map(document.getElementById('map'),{
+          zoom: 12,
+          mapTypeId: 'satellite',
+          center: new google.maps.LatLng(coord.lat,coord.lng)//coord
+          });
+      }
+    
+  function success(pos) {
+   var crd = pos.coords;
+
+  console.log("Your current position is:");
+  console.log(`Latitude : ${crd.latitude}`);
+  console.log(`Longitude: ${crd.longitude}`);
+  console.log(`More or less ${crd.accuracy} meters.`);
+  const svgMarker = {
+    path: "M-1.547 12l6.563-6.609-1.406-1.406-5.156 5.203-2.063-2.109-1.406 1.406zM0 0q2.906 0 4.945 2.039t2.039 4.945q0 1.453-0.727 3.328t-1.758 3.516-2.039 3.070-1.711 2.273l-0.75 0.797q-0.281-0.328-0.75-0.867t-1.688-2.156-2.133-3.141-1.664-3.445-0.75-3.375q0-2.906 2.039-4.945t4.945-2.039z",
+    fillColor: "yellow",
+    fillOpacity: 0.6,
+    strokeWeight: 0,
+    rotation: 0,
+    scale: 2,
+    anchor: new google.maps.Point(0, 20),
+  };
+
+   var marker = new google.maps.Marker({
+                                position: { lat: crd.latitude, lng:crd.longitude  },
+                              
+                                icon: svgMarker,
+                                draggable:true,
+                                map: map,
+                              });
+}   
+    
+
+
+    
+// Establecemos a que direccion realizar fetch
+ fetch("https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/falles-fallas/exports/geojson?lang=es&timezone=Europe%2FBerlin", {
+    
+    // Establecemos método GET
+    method:"GET",
+    mode: 'cors',
+    //No enviamos body al ser GET
+    // Indicamos en las cabeceras como es el contenido que enviamos
+    headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+    }
+// Código a ejecutar al recibir la respuesta
+}).then(function(response){
+        // Si la respuesta es correcta
+        if (response.ok) {
+        // Codigo para llamar funcion / hacer funcion anonima,
+        // que gestione codigo de la respuesta
+        // en este ejemplo, "respuesta" contiene JSON 
+        //devuelto por el servidor
+            response.json().then( function (respuesta) {
+
+              
+              datos=respuesta['features'];
+
+            
+           
+              for (var i = 0; i < datos.length; i++) {
+
+                              var coords = datos[i].geometry.coordinates;
+                              var contentString=datos[i].properties.nombre;
+                              
+                              infowindow = new google.maps.InfoWindow({
+                                maxWidth:1000,
+
+                              });
+                             
+
+                              var marker = new google.maps.Marker({
+                                position: { lat: coords[1], lng: coords[0] },
+                                label: datos[i].properties.seccion,
+                                map: map,
+                              });
+                            
+                              markers.push(marker);
+
+                              /***********************            Categoria Especial             **************************/
+                         /*   if(datos[i].properties.seccion!='E')
+                              marker.setMap(null);*/
+
+
+                              google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                              return function() {
+                                var contentString="<div class='presentacion'>"+
+                                                        "<div class='posicion'>"+"<strong>Nombre: </strong>"+datos[i].properties.nombre+"<br>"+
+                                                        " Lema: <strong><mark>"+datos[i].properties.lema+"</mark></strong><br />"+
+                                                        " Seccion: "+datos[i].properties.seccion+"<br />"+
+                                                        "</div>"+
+                                                  "<img src='"+datos[i].properties.boceto+"'/>"+
+                                                  "</div>";
+                                infowindow.setContent(contentString);
+                                //infowindow.setOptions({maxWidth: 200});
+                                infowindow.open(map, marker);
+                              }
+                            }) (marker, i));
+                            
+                           
+
+              }
+             
+                           
+
+              if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(success);
+    }
+    
+  
+    console.log(markers);
+             // use default algorithm and renderer
+
+new markerClusterer.MarkerClusterer({
+        map,
+        markers
+    });
+            
+
+             
+            });
+
+            
+            
+        }
+    
+});
+ 
+      
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDmlw0x8VUvt3OK4xnvXPOy3JUHaUrDqVM&callback=initMap"></script>
+
+</body>
+</html>
